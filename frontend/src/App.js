@@ -1,30 +1,53 @@
 // src/App.js
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
 import './App.css';
 import UserInfo from './UserInfo';
 import TransferPage from './TransferPage';
-import TransferForm from './TransferForm'; // 新しい送金処理ページをインポート
+import TransferForm from './TransferForm';
 
 function App() {
-  const userData = {
-    icon: 'https://via.placeholder.com/100',
-    accountNumber: '1234-5678-9012',
-    userName: '山田 太郎',
-    balance: 1000000, // 預金残高を数値として保持
-  };
+  const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    // Flask バックエンドからユーザー情報を取得
+    fetch('http://localhost:5000/api/users')
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
+      .then((data) => {
+        setUsers(data);
+        setLoading(false);
+      })
+      .catch((error) => {
+        setError(error);
+        setLoading(false);
+      });
+  }, []);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error.message}</div>;
+  }
 
   return (
-    <Router>
-      <div className="App">
-        <h1>ユーザ情報ページ</h1>
-        <Routes>
-          <Route path="/" element={<UserInfo user={userData} />} />
-          <Route path="/transfer" element={<TransferPage />} />
-          <Route path="/transfer-form" element={<TransferForm user={userData} />} /> {/* 送金処理ページのルート */}
-        </Routes>
-      </div>
-    </Router>
+    <div className="App">
+      <h1>ユーザー情報</h1>
+      {users.map((user) => (
+        <div key={user.id} className="user-card">
+          <p><strong>ユーザー名:</strong> {user.username}</p>
+          <p><strong>口座番号:</strong> {user.account_number}</p>
+          <img src={user.icon_url} alt={`${user.username}のアイコン`} /> 
+        </div>
+      ))}
+    </div>
   );
 }
 
