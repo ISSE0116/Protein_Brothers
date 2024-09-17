@@ -1,2 +1,2 @@
 # Protein_Brothers
-がｆがが
+がｆががｓ
