@@ -1,3 +1,2 @@
 # Protein_Brothers
-aaaaaaaaaaaa
-protein
+がｆがが
