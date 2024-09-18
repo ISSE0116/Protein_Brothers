@@ -3,9 +3,9 @@ def request():
     # try:
     connection = psycopg2.connect(
         host = "localhost",
-        database = "your_database",
-        user = "your_user",
-        password = "your_password"
+        database = "bank",
+        user = "postgres",
+        password = "ryo0818"
     )
 
     return connection

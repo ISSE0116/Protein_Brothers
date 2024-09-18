@@ -1,4 +1,4 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify,request
 from flask_cors import CORS
 import psycopg2
 import connection_SQL
@@ -16,32 +16,41 @@ CORS(app)
 
 #         #"icon_url": "https://example.com/icons/user1.png"
 #     }
-# ]
+# ]ss
+
+@app.route('/test', methods=['GET'])
+def test():
+    return jsonify(),200
+
 
 @app.route('/api/login', methods=['POST'])
-def login(request):
+def login():
     # リクエストボディからIDとパスワードを取得
     data = request.json
+    #print(data)
     user_id = data.get('id')
     password = data.get('password')
+    #print(type(user_id))
+    #print(type(password))
 
     user = []
     try:
         connection = connection_SQL.request()
         cursor = connection.cursor()
         # 引数として実行クエリを入力
-        query = '''
-            SELECT id, username, account_number 
-            FROM users 
-            WHERE id = %d AND password = %s
-        '''
+        query = "SELECT * FROM users WHERE id = %s AND password = %s;"
+
+        #print(query)
         cursor.execute(query, (user_id, password))
         # クエリの実行によって得たデータをリスト形式で取得
         user = cursor.fetchone()
 
         close_SQL.final(connection, cursor)
         if user:
-            return jsonify({"result": True, **user}), 200
+        # タプルを辞書型に変換
+            user_dict = dict(zip(('id', 'username', 'account_number', 'balance', 'password', 'icon'), user))
+            user_dict['result'] = True
+            return jsonify(user_dict), 200
         else:
             return jsonify({"result": False, "error": "Invalid credentials"}), 401
     
