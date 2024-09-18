@@ -44,23 +44,53 @@ def login():
         cursor.execute(query, (user_id, password))
         # クエリの実行によって得たデータをリスト形式で取得
         user = cursor.fetchone()
-        #print(user)
+        print(user)
 
         close_SQL.final(connection, cursor)
         if user:
+            #print('case1')
         # タプルを辞書型に変換
             user_dict = dict(zip(('id', 'username', 'account_number', 'icon', 'balance', 'password'), user))
+            #print('case1')
             user_dict['result'] = True
+            #print('case1')
             return jsonify(user_dict), 200
         else:
+            print('case2')
             return jsonify({"result": False, "error": "Invalid credentials"}), 401
     
     except Exception as error:
+        print('case3')
         return jsonify({"result": False, "error": str(error)}), 500
 
 ##############################################################
 # @app.route('/api/recipients', methods=['POST'])
 # def recipients(request):
+
+@app.route('/api/recipients', methods=['POST'])
+def get_recipients():
+    # リクエストボディからIDを取得
+    data = request.json
+    user_id = data.get('id')
+
+# try:
+    connection = connection_SQL.request()
+    cursor = connection.cursor()
+
+# IDに該当しないユーザーを取得するクエリ
+    query = '''
+    SELECT id, username, icon
+        FROM users
+        WHERE id != %s
+    '''
+    cursor.execute(query, (user_id,))
+
+# クエリの実行によって得たデータをリスト形式で取得
+    recipients = cursor.fetchall()
+    # 結果を辞書形式に変換
+    result = [{"id": recipient[0], "username": recipient[1], "icon": recipient[2]} for recipient in recipients]
+    close_SQL.final(connection, cursor)
+    return jsonify(result)
 
 
 
