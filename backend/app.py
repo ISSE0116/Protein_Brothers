@@ -79,10 +79,11 @@ def get_recipients():
 
 # IDに該当しないユーザーを取得するクエリ
     query = '''
-    SELECT id, username, icon
-        FROM users
-        WHERE id != %s
-    '''
+        SELECT id, username, icon
+        FROM users
+        WHERE id != %s
+        '''
+
     cursor.execute(query, (user_id,))
 
 # クエリの実行によって得たデータをリスト形式で取得
@@ -92,15 +93,60 @@ def get_recipients():
     close_SQL.final(connection, cursor)
     return jsonify(result)
 
+@app.route('/api/recipient/<int:id>', methods=['GET'])
+def get_recipient(id):
+    try:
+        connection = connection_SQL.request()
+        cursor = connection.cursor()
+        
+        # 指定したIDに基づいてユーザーを取得する
+        query = 'SELECT id, username, icon FROM users WHERE id = %s'
+        cursor.execute(query, (id,))
+        
+        recipient = cursor.fetchone()
+        if recipient:
+            result = {
+                'id': recipient[0],
+                'username': recipient[1],
+                'icon': recipient[2]
+            }
+            return jsonify(result), 200
+        else:
+            return jsonify({'error': 'Recipient not found'}), 404
+
+    except Exception as error:
+        return jsonify({'error': str(error)}), 500
+
+    finally:
+        close_SQL.final(connection, cursor)
 
 
-# @app.route('/api/balance', methods=['POST'])
-# def balance(request):
+@app.route('/api/remittance', methods=['POST'])
+def remittance():
+    data = request.json
+    sender_id = data.get('senderId')
+    recipient_id = data.get('recipientId')
+    amount = data.get('amount')
 
+    try:
+        connection = connection_SQL.request()
+        cursor = connection.cursor()
 
+        # 残高を確認し送信元の残高を減少、送信先の残高を増加
+        cursor.execute("UPDATE users SET balance = balance - %s WHERE id = %s AND balance >= %s", (amount, sender_id, amount))
+        if cursor.rowcount == 0:
+            return jsonify({"result": False, "error": "残高不足です。"})
 
-# @app.route('/api/balance', methods=['POST'])
-# def remittance(request):
+        cursor.execute("UPDATE users SET balance = balance + %s WHERE id = %s", (amount, recipient_id))
+
+        connection.commit()
+        close_SQL.final(connection, cursor)
+
+        return jsonify({"result": True})
+
+    except Exception as error:
+        return jsonify({"result": False, "error": str(error)}), 500
+
 
 
 

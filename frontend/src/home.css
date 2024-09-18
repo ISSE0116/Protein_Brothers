@@ -1,15 +1,75 @@
-/* src/App.css */
-.App {
-  text-align: center;
+/* 全体の背景色とフォントの設定 */
+body, html {
   font-family: Arial, sans-serif;
-  padding: 20px;
+  background-color: #f0f0f5; /* 全体の背景色 */
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
 }
 
-.user-card {
-  border: 1px solid #ddd;
-  padding: 16px;
-  margin: 16px;
+/* メインコンテナ */
+.container {
+  width: 100%;
+  padding: 20px;
+  box-sizing: border-box;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* アイコンを中央揃え */
+}
+
+/* 挨拶メッセージのスタイル（小さく主張を控えめに） */
+.greeting {
+  font-size: 18px; /* 小さめのフォントサイズ */
+  color: #555;
+  margin-bottom: 10px;
+}
+
+/* 丸い図形にアイコンを表示（中央揃え） */
+.icon-container {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  background-color: #e0e0e0; /* アイコンがない場合の背景色 */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 20px 0;
+}
+
+img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+/* 四角い枠で囲まれた口座情報と残高のスタイル */
+.info-box {
+  width: 80%;
+  max-width: 400px;
+  padding: 15px;
+  margin: 10px 0;
+  background-color: white;
+  border: 1px solid #ccc;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   text-align: left;
+}
+
+.info-box p {
+  margin: 0;
+  font-size: 20px;
+  color: #333;
+}
+
+.info-label {
+  font-weight: bold;
+  color: #4a90e2;
+}
+
+.info-value {
+  margin-top: 5px;
+  color: #333;
 }

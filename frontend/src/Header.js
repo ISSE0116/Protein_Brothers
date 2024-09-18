@@ -1,4 +1,3 @@
-// Header.js
 import React, { useContext, useState } from 'react';
 import { UserContext } from './UserContext';
 import './Header.css';
@@ -26,7 +25,10 @@ const Header = () => {
         )}
 
         {/* ハンバーガーメニュー */}
-        <div className="hamburger-menu" onClick={toggleMenu}>
+        <div
+          className={`hamburger-menu ${menuOpen ? 'open' : ''}`}
+          onClick={toggleMenu}
+        >
           <span></span>
           <span></span>
           <span></span>
@@ -34,14 +36,13 @@ const Header = () => {
       </div>
 
       {/* メニューを開いた状態の表示 */}
-      {menuOpen && (
-        <nav className="menu">
-          <ul>
-            <li><a href="/recipients">送金</a></li>
-            <li><a href="/claim">請求</a></li>
-          </ul>
-        </nav>
-      )}
+      <nav className={`menu ${menuOpen ? 'open' : ''}`}>
+        <ul>
+          <li><a href="/home">マイページ</a></li>
+          <li><a href="/recipients">送金</a></li>
+          <li><a href="/claim">請求</a></li>
+        </ul>
+      </nav>
     </header>
   );
 };

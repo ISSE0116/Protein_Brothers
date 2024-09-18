@@ -1,5 +1,4 @@
-// UserContext.js
-import React, { createContext, useReducer } from 'react';
+import React, { createContext, useReducer, useEffect } from 'react';
 
 // 初期ユーザーデータの定義
 const initialState = {
@@ -15,11 +14,15 @@ const initialState = {
 const userReducer = (state, action) => {
   switch (action.type) {
     case 'SET_USER':
+      // ユーザー情報をlocalStorageに保存
+      localStorage.setItem('user', JSON.stringify(action.payload));
       return {
         ...state,
         ...action.payload
       };
     case 'CLEAR_USER':
+      // localStorageからユーザー情報を削除
+      localStorage.removeItem('user');
       return initialState; // ユーザー情報をクリア
     default:
       return state;
@@ -32,6 +35,14 @@ export const UserContext = createContext();
 // プロバイダコンポーネントを作成
 export const UserProvider = ({ children }) => {
   const [user, dispatch] = useReducer(userReducer, initialState);
+
+  // localStorageからユーザー情報を読み込む
+  useEffect(() => {
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      dispatch({ type: 'SET_USER', payload: JSON.parse(storedUser) });
+    }
+  }, []);
 
   return (
     <UserContext.Provider value={{ user, dispatch }}>

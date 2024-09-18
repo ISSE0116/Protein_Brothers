@@ -1,15 +1,28 @@
-// src/TransferPage.js
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext} from 'react';
+import { useNavigate } from 'react-router-dom';
 import './TransferPage.css';
+import { UserContext } from './UserContext'; 
 
 const TransferPage = () => {
   const [recipients, setRecipients] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
+
+  const { user } = useContext(UserContext); // コンテキストからユーザー情報を取得
+
+  // ユーザー情報をコンソールに出力して確認
+  console.log("User Context Data:", user);
 
   useEffect(() => {
-    // Flask バックエンドから送金先のユーザー情報を取得
-    fetch('http://localhost:5000/api/recipients')
+    const loggedInUserId = 1; // 実際にはログインしているユーザーIDを使用
+    fetch('http://localhost:5000/api/recipients', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ id: loggedInUserId }),
+    })
       .then((response) => {
         if (!response.ok) {
           throw new Error('Network response was not ok');
@@ -26,6 +39,10 @@ const TransferPage = () => {
       });
   }, []);
 
+  const handleRecipientClick = (id) => {
+    navigate(`/send/${id}`); // クリックされたユーザーのIDを送金ページに渡す
+  };
+
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -39,9 +56,21 @@ const TransferPage = () => {
       <h2>送金先ユーザー一覧</h2>
       <div className="recipients-list">
         {recipients.map((recipient) => (
-          <div key={recipient.id} className="recipient-card">
-            <img src={recipient.icon} alt={`${recipient.user_name}のアイコン`} className="recipient-icon" />
-            <p className="recipient-name">{recipient.user_name}</p>
+          <div
+            key={recipient.id}
+            className="recipient-card"
+            onClick={() => handleRecipientClick(recipient.id)} // クリックで送金ページに移動
+          >
+            {recipient.icon ? (
+              <img
+                src={`data:image/png;base64,${recipient.icon}`}
+                alt={`${recipient.username}のアイコン`}
+                className="recipient-icon"
+              />
+            ) : (
+              <div className="recipient-icon-placeholder">No Icon</div>
+            )}
+            <p className="recipient-name">{recipient.username}</p>
           </div>
         ))}
       </div>

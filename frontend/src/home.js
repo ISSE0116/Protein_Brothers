@@ -1,22 +1,33 @@
-// home.js
 import React, { useContext } from 'react';
 import { UserContext } from './UserContext'; // コンテキストをインポート
+import './home.css'
 
 const Home = () => {
   const { user } = useContext(UserContext); // コンテキストからユーザー情報を取得
 
+  // ユーザー情報をコンソールに出力して確認
+  console.log("User Context Data:", user);
   return (
-    <div>
-      <h1>Home Page</h1>
-      <p>Welcome, {user.username}!</p>
-      <p>ID: {user.id}</p>
-      <p>Account Number: {user.account_number}</p>
-      <p>Balance: {user.balance}</p>
-      {user.icon ? (
-        <img src={`data:image/png;base64,${user.icon}`} alt="User Icon" />
-      ) : (
-        <p>No icon available</p>
-      )}
+    <div className="container">
+      <p className="greeting">こんにちは、{user.username}さん</p>
+      
+      <div className="icon-container">
+        {user.icon ? (
+          <img src={`data:image/png;base64,${user.icon}`} alt="User Icon" />
+        ) : (
+          <div className="icon-placeholder"></div>
+        )}
+      </div>
+      
+      <div className="info-box">
+        <p className="info-label">口座番号:</p>
+        <p className="info-value">{user.account_number}</p>
+      </div>
+      
+      <div className="info-box">
+        <p className="info-label">残高:</p>
+        <p className="info-value">¥{user.balance}</p>
+      </div>
     </div>
   );
 };
