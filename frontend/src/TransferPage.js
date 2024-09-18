@@ -1,4 +1,3 @@
-// src/TransferPage.js
 import React, { useState, useEffect } from 'react';
 import './TransferPage.css';
 
@@ -8,8 +7,15 @@ const TransferPage = () => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    // Flask バックエンドから送金先のユーザー情報を取得
-    fetch('http://localhost:5000/api/recipients')
+    // ログインしているユーザーIDを送信する
+    const loggedInUserId = 1; // 実際にはログインしているユーザーIDを使用
+    fetch('http://localhost:5000/api/recipients', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ id: loggedInUserId }),
+    })
       .then((response) => {
         if (!response.ok) {
           throw new Error('Network response was not ok');
@@ -40,8 +46,12 @@ const TransferPage = () => {
       <div className="recipients-list">
         {recipients.map((recipient) => (
           <div key={recipient.id} className="recipient-card">
-            <img src={recipient.icon} alt={`${recipient.user_name}のアイコン`} className="recipient-icon" />
-            <p className="recipient-name">{recipient.user_name}</p>
+            {recipient.icon ? (
+              <img src={`data:image/png;base64,${recipient.icon}`} alt={`${recipient.username}のアイコン`} className="recipient-icon" />
+            ) : (
+              <div className="recipient-icon-placeholder">No Icon</div>
+            )}
+            <p className="recipient-name">{recipient.username}</p>
           </div>
         ))}
       </div>

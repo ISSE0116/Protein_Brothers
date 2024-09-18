@@ -79,10 +79,11 @@ def get_recipients():
 
 # IDに該当しないユーザーを取得するクエリ
     query = '''
-    SELECT id, username, icon
-        FROM users
-        WHERE id != %s
-    '''
+        SELECT id, username, icon
+        FROM users
+        WHERE id != %s
+        '''
+
     cursor.execute(query, (user_id,))
 
 # クエリの実行によって得たデータをリスト形式で取得
