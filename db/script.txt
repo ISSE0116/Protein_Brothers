@@ -1,0 +1,11 @@
+create table users(
+test(> id serial PRIMARY KEY,
+test(> username text not null,
+test(> accout_number varchar(7) unique not null,
+test(> icon bytea,
+test(> balance integer not null,
+test(> password varchar(7) not null
+test(> );
+
+insert into users(username, acount_number, balance, password) values('ことり', '1234567', 10000, '1234567');
+insert into users(username, acount_number, balance, password) values('小島', '0987654', 10000, '0987654');
