@@ -7,13 +7,13 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.user-list {
+.recipients-list {
   display: flex;
   flex-wrap: wrap;
   gap: 16px;
 }
 
-.user-card {
+.recipient-card {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -25,14 +25,14 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.user-icon {
+.recipient-icon {
   width: 80px;
   height: 80px;
   border-radius: 50%;
   margin-bottom: 8px;
 }
 
-.user-name {
+.recipient-name {
   font-size: 14px;
   color: #333;
 }

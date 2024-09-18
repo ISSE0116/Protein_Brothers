@@ -1,9 +1,10 @@
 // src/App.js
 import React, { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './App.css';
-import UserInfo from './UserInfo';
-import TransferPage from './TransferPage';
-import TransferForm from './TransferForm';
+import UserInfo from './UserInfo'; // ユーザー情報ページのインポート
+import TransferPage from './TransferPage'; // 送金ページのインポート
+import TransferForm from './TransferForm'; // 送金フォームページのインポート
 
 function App() {
   const [users, setUsers] = useState([]);
@@ -37,17 +38,28 @@ function App() {
     return <div>Error: {error.message}</div>;
   }
 
+  const userData = users[0]; // 最初のユーザーを使用
+
   return (
-    <div className="App">
-      <h1>ユーザー情報</h1>
-      {users.map((user) => (
-        <div key={user.id} className="user-card">
-          <p><strong>ユーザー名:</strong> {user.username}</p>
-          <p><strong>口座番号:</strong> {user.account_number}</p>
-          <img src={user.icon_url} alt={`${user.username}のアイコン`} /> 
-        </div>
-      ))}
-    </div>
+    <Router>
+      <div className="App">
+        <h1>送金アプリ</h1>
+        {/* App.js のみでユーザー情報を表示 */}
+        {userData && (
+          <div className="user-card">
+            <p><strong>ユーザー名:</strong> {userData.username}</p>
+            <p><strong>口座番号:</strong> {userData.account_number}</p>
+          </div>
+        )}
+        {/* ルーティングの設定 */}
+        <Routes>
+          {/* ユーザー情報を `UserInfo` に渡す */}
+          <Route path="/" element={<UserInfo />} /> 
+          <Route path="/transfer" element={<TransferPage />} />
+          <Route path="/transfer-form" element={<TransferForm user={userData} />} /> {/* `userData` を渡す */}
+        </Routes>
+      </div>
+    </Router>
   );
 }
 
