@@ -9,13 +9,18 @@ const TransferForm = ({ user }) => {
 
   const [amount, setAmount] = useState(''); // 送金金額の状態を管理
 
+  // `user` が未定義の場合の対策
+  if (!user) {
+    return <div>ユーザー情報が見つかりません。</div>;
+  }
+
   const handleChange = (e) => {
     setAmount(e.target.value);
   };
 
   const handleSubmit = () => {
     // 送金処理のロジックをここに記述
-    console.log(`送金先: ${recipient.name}, 金額: ${amount}円`);
+    console.log(`送金先: ${recipient ? recipient.name : '不明'}, 金額: ${amount}円`);
   };
 
   return (
