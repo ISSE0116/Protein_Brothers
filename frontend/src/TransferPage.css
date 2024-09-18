@@ -6,6 +6,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: 20px;
+  justify-content: center; /* アイテムを中央揃え */
 }
 
 .recipient-card {
@@ -14,6 +15,9 @@
   padding: 10px;
   text-align: center;
   width: 150px;
+  display: flex;
+  flex-direction: column; /* アイテムを縦に並べる */
+  align-items: center; /* 子要素を中央揃え */
 }
 
 .recipient-icon {
@@ -38,4 +42,5 @@
   margin-top: 10px;
   font-size: 16px;
   font-weight: bold;
+  text-align: center;
 }

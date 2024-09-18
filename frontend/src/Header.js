@@ -38,6 +38,7 @@ const Header = () => {
       {/* メニューを開いた状態の表示 */}
       <nav className={`menu ${menuOpen ? 'open' : ''}`}>
         <ul>
+          <li><a href="/home">マイページ</a></li>
           <li><a href="/recipients">送金</a></li>
           <li><a href="/claim">請求</a></li>
         </ul>

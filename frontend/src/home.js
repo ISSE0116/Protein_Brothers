@@ -5,6 +5,8 @@ import './home.css'
 const Home = () => {
   const { user } = useContext(UserContext); // コンテキストからユーザー情報を取得
 
+  // ユーザー情報をコンソールに出力して確認
+  console.log("User Context Data:", user);
   return (
     <div className="container">
       <p className="greeting">こんにちは、{user.username}さん</p>
