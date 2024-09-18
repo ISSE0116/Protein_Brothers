@@ -48,6 +48,23 @@ def login(request):
     except Exception as error:
         return jsonify({"result": False, "error": str(error)}), 500
 
+##############################################################
+# @app.route('/api/recipients', methods=['POST'])
+# def recipients(request):
+
+
+
+# @app.route('/api/balance', methods=['POST'])
+# def balance(request):
+
+
+
+# @app.route('/api/balance', methods=['POST'])
+# def remittance(request):
+
+
+
+#############################################################
 
 # @app.route('/api/user', methods=['GET'])
 # def get_user():
