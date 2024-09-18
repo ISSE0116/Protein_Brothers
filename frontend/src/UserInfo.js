@@ -1,20 +1,23 @@
-// src/UserInfo.js
-import React from 'react';
-import { useNavigate } from 'react-router-dom'; // useNavigate フックをインポート
-import './UserInfo.css';
+// UserContext.js
+import React, { createContext, useState } from 'react';
 
-const UserInfo = () => {
-  const navigate = useNavigate(); // ページ遷移用のフックを使用
+// ユーザー情報のコンテキストを作成
+export const UserContext = createContext();
 
-  const handleTransferClick = () => {
-    navigate('/transfer'); // 送金ページへ遷移
-  };
+// UserProviderコンポーネントを作成
+export const UserProvider = ({ children }) => {
+  const [user, setUser] = useState({
+    id: null,
+    username: '',
+    account_number: null,
+    icon: null,
+    balance: null,
+    password: ''
+  });
 
   return (
-    <div className="user-info">
-      <button onClick={handleTransferClick} className="transfer-button">送金</button>
-    </div>
+    <UserContext.Provider value={{ user, setUser }}>
+      {children}
+    </UserContext.Provider>
   );
-}
-
-export default UserInfo;
+};
