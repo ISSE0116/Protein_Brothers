@@ -1,11 +1,29 @@
 create table users(
-test(> id serial PRIMARY KEY,
-test(> username text not null,
-test(> accout_number varchar(7) unique not null,
-test(> icon bytea,
-test(> balance integer not null,
-test(> password varchar(7) not null
+     id serial PRIMARY KEY,
+ username text not null,
+ accout_number varchar(7) unique not null,
+ icon bytea,
+ balance integer not null,
+ password varchar(7) not null
 test(> );
 
 insert into users(username, acount_number, balance, password) values('ことり', '1234567', 10000, '1234567');
 insert into users(username, acount_number, balance, password) values('小島', '0987654', 10000, '0987654');
+
+create table billing_history(
+    id serial PRIMARY KEY,
+    amount integer NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    message TEXT,
+    is_paid BOOLEAN DEFAULT FALSE,
+    billing_link TEXT,
+    recipient_id INTEGER REFERENCES users(id),
+    sender_id INTEGER REFERENCES users(id),
+    sent_at TIMESTAMP WITH TIME ZONE
+);
+
+INSERT INTO billing_history (
+amount,message,billing_link,recipient_id) VALUES
+(1000, '1月分の利用料金', 'https://example.com/billing/123', 2),
+(5000, '特別キャンペーン割引', 'https://example.com/billing/456', 3),
+(2500, '追加オプション料金', 'https://example.com/billing/789', 2);
