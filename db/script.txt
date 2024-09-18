@@ -1,14 +1,19 @@
 create table users(
-     id serial PRIMARY KEY,
+ id serial PRIMARY KEY,
  username text not null,
- accout_number varchar(7) unique not null,
+ account_number varchar(7) unique not null,
  icon bytea,
  balance integer not null,
  password varchar(7) not null
-test(> );
+);
 
-insert into users(username, acount_number, balance, password) values('ことり', '1234567', 10000, '1234567');
-insert into users(username, acount_number, balance, password) values('小島', '0987654', 10000, '0987654');
+insert into users(username, account_number, balance, password) values
+('ことり', '1234567', 10000, '1234567'),
+('小島', '0987654', 10000, '0987654'),
+('あああ', '7890123', 500000, '7890123'),
+('たかし', '2345678', 20000, '2345678'),
+('さくら', '3456789', 150000, '3456789'),
+('やまだ', '4567890', 50000, '4567890');
 
 create table billing_history(
     id serial PRIMARY KEY,
@@ -22,8 +27,10 @@ create table billing_history(
     sent_at TIMESTAMP WITH TIME ZONE
 );
 
-INSERT INTO billing_history (
-amount,message,billing_link,recipient_id) VALUES
+insert into billing_history (amount,message,billing_link,recipient_id) values
 (1000, '1月分の利用料金', 'https://example.com/billing/123', 2),
 (5000, '特別キャンペーン割引', 'https://example.com/billing/456', 3),
-(2500, '追加オプション料金', 'https://example.com/billing/789', 2);
+(2500, '追加オプション料金', 'https://example.com/billing/789', 2),
+(3000, '2月分の利用料金', 'https://example.com/billing/101', 1),
+(4500, 'サービスアップグレード料金', 'https://example.com/billing/102', 5),
+(1500, 'プロモーション割引', 'https://example.com/billing/103', 4);

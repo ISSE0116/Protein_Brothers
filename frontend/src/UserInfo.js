@@ -11,7 +11,7 @@ export const UserProvider = ({ children }) => {
     username: '',
     account_number: null,
     icon: null,
-    balance: null,
+    balance: 0,
     password: ''
   });
 

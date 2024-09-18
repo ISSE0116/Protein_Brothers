@@ -44,11 +44,12 @@ def login():
         cursor.execute(query, (user_id, password))
         # クエリの実行によって得たデータをリスト形式で取得
         user = cursor.fetchone()
+        #print(user)
 
         close_SQL.final(connection, cursor)
         if user:
         # タプルを辞書型に変換
-            user_dict = dict(zip(('id', 'username', 'account_number', 'balance', 'password', 'icon'), user))
+            user_dict = dict(zip(('id', 'username', 'account_number', 'icon', 'balance', 'password'), user))
             user_dict['result'] = True
             return jsonify(user_dict), 200
         else:
