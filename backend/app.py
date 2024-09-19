@@ -4,6 +4,7 @@ import psycopg2
 import connection_SQL
 import close_SQL
 import base64;
+from datetime import datetime
 
 app = Flask(__name__)
 CORS(app)
@@ -174,92 +175,50 @@ def remittance():
 
 
 
-#############################################################
+@app.route('/api/post_billing', method=['POST'])
+def post_billing():
+    data = request.json
+    bill = data.get('bill')
+    message = data.get('message')
+    id = data.get('id')
+    current_time = datetime.now().isoformat()
 
-# @app.route('/api/user', methods=['GET'])
-# def get_user():
-#     records = []
-#     user_id = request.args.get('user_id')
-#     try:
-#         connection = connection_SQL.request()
-#         cursor = connection.cursor()
-#         # 引数として実行クエリを入力
-#         querry = 'SELECT id, username, account_number FROM users WHERE id = %s'
-#         cursor.execute(querry, (user_id,))
-#         # クエリの実行によって得たデータをリスト形式で取得
-#         records = cursor.fetchall()
-    
-#     except Exception as error:
-#         print("Error Occured : ", error)
+    if not id:
+        return jsonify({"result": False, "error": "Invalid data"}), 400
+    try:
+        connection = connection_SQL.request()
+        cursor = connection.cursor()
 
-#     users = []
-#     for row in records:
-#         users.append({
-#             "id": row[0],
-#             "username": row[1],
-#             "account_number": row[2]
-#     })
+        # メッセージをmessageテーブルに挿入
+        insert_billing = '''
+        INSERT INTO billing_history (amount, created_at, message, recipient_id) 
+        VALUES (%s, %s, %s, %s);
+        '''
+        cursor.execute(insert_billing, (bill, current_time, message, id))
 
-#     close_SQL.final(connection, cursor)
-#     return jsonify(users)
+        # コミットして変更を確定
+        connection.commit()
 
-# @app.route('/api/user', methods=['GET'])
-# def get_user():
-#     records = []
-#     user_id = request.args.get('user_id')
-#     try:
-#         connection = connection_SQL.request()
-#         cursor = connection.cursor()
-#         # 引数として実行クエリを入力
-#         querry = 'SELECT id, username, account_number FROM users WHERE id = %s'
-#         cursor.execute(querry, (user_id,))
-#         # クエリの実行によって得たデータをリスト形式で取得
-#         records = cursor.fetchall()
-    
-#     except Exception as error:
-#         print("Error Occured : ", error)
+        query = "SELECT id FROM billing_history WHERE created_at = %s AND recipient_id = %s;"
 
-#     users = []
-#     for row in records:
-#         users.append({
-#             "id": row[0],
-#             "username": row[1],
-#             "account_number": row[2]
-#     })
+        #print(query)
+        cursor.execute(query, (current_time, id))
+        # クエリの実行によって得たデータをリスト形式で取得
+        billing_number = cursor.fetchone()
 
-#     close_SQL.final(connection, cursor)
-#     return jsonify(users)
+        close_SQL.final(connection, cursor)
+        if billing_number:
+            user_dict = dict(zip(('id'), [billing_number]))
+            user_dict['result'] = True
+            #print('case1')
+            # print(user_dict)
+            return jsonify(user_dict), 200
 
+        else:
+            return jsonify({"result": False, "error": "Invalid credentials"}), 401
 
-# @app.route('/api/users/<int:user_id>', methods=['GET'])
-# def get_users(user_id):
-#     records = []
-#     try:
-#         connection = connection_SQL.request()
-#         cursor = connection.cursor()
-#         # 引数として実行クエリを入力
-#         querry = 'SELECT id, username, account_number FROM users WHERE id != %s'
-#         cursor.execute(querry, (user_id,))
-#         # クエリの実行によって得たデータをリスト形式で取得
-#         records = cursor.fetchall()
-    
-#     except Exception as error:
-#         print("Error Occured : ", error)
-
-#     users = []
-#     for row in records:
-#         users.append({
-#             "id": row[0],
-#             "username": row[1],
-#             "account_number": row[2]
-#     })
-
-#     close_SQL.final(connection, cursor)
-#     return jsonify(users)
-
-
-# @app.route()
-
+    except Exception as error:
+        return jsonify({"result": False, "error": str(error)}), 500
 
 if __name__ == '__main__':
     app.run(debug=True)
