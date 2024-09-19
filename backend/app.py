@@ -3,6 +3,7 @@ from flask_cors import CORS
 import psycopg2
 import connection_SQL
 import close_SQL
+import base64;
 
 app = Flask(__name__)
 CORS(app)
@@ -47,13 +48,19 @@ def login():
         print(user)
 
         close_SQL.final(connection, cursor)
+        #print(user)
+        #user[3] = base64.b64decode(user[3])
         if user:
-            #print('case1')
+            
+            print('case1')
         # タプルを辞書型に変換
-            user_dict = dict(zip(('id', 'username', 'account_number', 'icon', 'balance', 'password'), user))
+            #user_dict = dict(zip(('id', 'username', 'account_number', 'icon', 'balance', 'password'), user))
+            encoded_icon = base64.b64encode(user[3]).decode('utf-8') # user_dictを作成
+            user_dict = dict(zip(('id', 'username', 'account_number', 'icon', 'balance', 'password'), [user[0], user[1], user[2], encoded_icon, user[4], user[5]]))
             #print('case1')
             user_dict['result'] = True
             #print('case1')
+            print(user_dict)
             return jsonify(user_dict), 200
         else:
             print('case2')
@@ -89,7 +96,8 @@ def get_recipients():
 # クエリの実行によって得たデータをリスト形式で取得
     recipients = cursor.fetchall()
     # 結果を辞書形式に変換
-    result = [{"id": recipient[0], "username": recipient[1], "icon": recipient[2]} for recipient in recipients]
+    #encoded_icon = base64.b64encode(user[2]).decode('utf-8') # user_dictを作成
+    result = [{"id": recipient[0], "username": recipient[1], "icon": base64.b64encode(recipient[2]).decode('utf-8')} for recipient in recipients]
     close_SQL.final(connection, cursor)
     return jsonify(result)
 
@@ -108,7 +116,7 @@ def get_recipient(id):
             result = {
                 'id': recipient[0],
                 'username': recipient[1],
-                'icon': recipient[2]
+                'icon': base64.b64encode(recipient[2]).decode('utf-8')
             }
             return jsonify(result), 200
         else:
