@@ -1,9 +1,8 @@
-/* Header.css */
 .header {
-  background-color: #a8d5ba; /* 優しい緑 */
+  background-color: #e0d1ca; /* 優しい緑 */
   color: white;
   display: flex;
-  justify-content: space-between;
+  justify-content: space-between; /* 左端と右端に要素を配置 */
   align-items: center;
   padding: 20px 40px;
   position: relative;
@@ -12,12 +11,13 @@
 .header-content {
   display: flex;
   align-items: center;
-  width: 100%;
+  justify-content: center; /* 中央揃え */
+  flex-grow: 1; /* コンテンツが中央に寄るように調整 */
 }
 
-.user-icon {
-  width: 50px;
-  height: 50px;
+.bank-logo {
+  width: 60px;
+  height: 60px;
   border-radius: 50%;
   object-fit: cover;
 }
@@ -106,4 +106,4 @@
 
 .menu li a:hover {
   background-color: #555;
-}
+}/* Header.css */

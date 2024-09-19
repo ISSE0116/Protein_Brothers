@@ -13,17 +13,8 @@ const Header = () => {
   return (
     <header className="header">
       <div className="header-content">
-        {/* ユーザーアイコン */}
-        {user.icon ? (
-          <img
-            src={`data:image/png;base64,${user.icon}`}
-            alt="User Icon"
-            className="user-icon"
-          />
-        ) : (
-          <div className="user-icon-placeholder">Icon</div>
-        )}
-
+        {/* ユーザーロゴ画像を常に表示 */}
+          <img src="/images/BankLogo.png" alt="logo" className="bank-logo" />
         {/* ハンバーガーメニュー */}
         <div
           className={`hamburger-menu ${menuOpen ? 'open' : ''}`}
