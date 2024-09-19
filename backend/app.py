@@ -127,26 +127,42 @@ def remittance():
     sender_id = data.get('senderId')
     recipient_id = data.get('recipientId')
     amount = data.get('amount')
+    message = data.get('message')  # メッセージを取得
+
+    if not sender_id or not recipient_id or not amount:
+        return jsonify({"result": False, "error": "Invalid data"}), 400
 
     try:
         connection = connection_SQL.request()
         cursor = connection.cursor()
 
-        # 残高を確認し送信元の残高を減少、送信先の残高を増加
-        cursor.execute("UPDATE users SET balance = balance - %s WHERE id = %s AND balance >= %s", (amount, sender_id, amount))
-        if cursor.rowcount == 0:
-            return jsonify({"result": False, "error": "残高不足です。"})
+        # 送信元の残高を更新
+        update_sender_balance = '''
+        UPDATE users SET balance = balance - %s WHERE id = %s;
+        '''
+        cursor.execute(update_sender_balance, (amount, sender_id))
 
-        cursor.execute("UPDATE users SET balance = balance + %s WHERE id = %s", (amount, recipient_id))
+        # 送信先の残高を更新
+        update_receiver_balance = '''
+        UPDATE users SET balance = balance + %s WHERE id = %s;
+        '''
+        cursor.execute(update_receiver_balance, (amount, recipient_id))
 
+        # メッセージをmessageテーブルに挿入
+        insert_message = '''
+        INSERT INTO message (sender_id, receiver_id, message) 
+        VALUES (%s, %s, %s);
+        '''
+        cursor.execute(insert_message, (sender_id, recipient_id, message))
+
+        # コミットして変更を確定
         connection.commit()
         close_SQL.final(connection, cursor)
 
-        return jsonify({"result": True})
+        return jsonify({"result": True}), 200
 
     except Exception as error:
         return jsonify({"result": False, "error": str(error)}), 500
-
 
 
 
