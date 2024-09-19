@@ -15,7 +15,7 @@ const TransferPage = () => {
   console.log("User Context Data:", user);
 
   useEffect(() => {
-    const loggedInUserId = 1; // 実際にはログインしているユーザーIDを使用
+    const loggedInUserId = user.id; // 実際にはログインしているユーザーIDを使用
     fetch('http://localhost:5000/api/recipients', {
       method: 'POST',
       headers: {
@@ -37,7 +37,7 @@ const TransferPage = () => {
         setError(error);
         setLoading(false);
       });
-  }, []);
+  }, [user.id]);
 
   const handleRecipientClick = (id) => {
     navigate(`/send/${id}`); // クリックされたユーザーのIDを送金ページに渡す
