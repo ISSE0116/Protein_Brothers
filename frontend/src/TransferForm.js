@@ -1,4 +1,3 @@
-//TransferForm.js
 import React, { useState, useContext } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { UserContext } from './UserContext';
@@ -8,6 +7,7 @@ const TransferForm = () => {
   const { user, dispatch } = useContext(UserContext);
   const { id: recipientId } = useParams(); // 送金相手のIDを取得
   const [amount, setAmount] = useState('');
+  const [message, setMessage] = useState(''); // メッセージのステートを追加
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
@@ -30,6 +30,7 @@ const TransferForm = () => {
           senderId: user.id,
           recipientId: recipientId,
           amount: parseFloat(amount),
+          message: message, // メッセージも送信
         }),
       });
 
@@ -57,8 +58,8 @@ const TransferForm = () => {
   return (
     <div className="transfer-form">
       <h2>送金フォーム</h2>
-      <p>送金先のユーザーID: {recipientId}</p>
-      <p>残高: {user.balance} 円</p>
+      <p>送金先: {user.username}</p>
+      <p>預金残高: {user.balance} 円</p>
       {error && <p className="error-message">{error}</p>}
       <form onSubmit={handleSubmit}>
         <div>
@@ -68,6 +69,15 @@ const TransferForm = () => {
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
             required
+          />
+        </div>
+        <div>
+          <label>メッセージ:</label>
+          <textarea
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+            placeholder="メッセージを入力してください"
+            rows="3"
           />
         </div>
         <button type="submit">送金する</button>

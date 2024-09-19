@@ -53,7 +53,7 @@ const TransferPage = () => {
 
   return (
     <div className="transfer-page">
-      <h2>送金先ユーザー一覧</h2>
+      <h2>送金先一覧</h2>
       <div className="recipients-list">
         {recipients.map((recipient) => (
           <div
