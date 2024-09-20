@@ -7,6 +7,7 @@ import Recipients from './TransferPage';
 import Send from './TransferForm';
 import TransferSuccess from './TransferSuccess';
 import BillingForm from './BillingForm';
+import BillingMakelink from './BillingMakelink';
 
 const AppRouter = () => {
   return (
@@ -17,7 +18,8 @@ const AppRouter = () => {
         <Route path="/send/:id" element={<Send />} /> {/* ユーザーID付きで送金ページへ */}
         <Route path="/recipients" element={<Recipients />} />
         <Route path="/transfer-success" element={<TransferSuccess />} />
-        <Route path="/billing/create" element={<BillingForm />} />     
+        <Route path="/billing/create" element={<BillingForm />} />
+        <Route path="/billing/makelink" element={<BillingMakelink />} />     
       </Routes>
     </Router>
   );

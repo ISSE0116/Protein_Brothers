@@ -15,6 +15,7 @@ const TransferPage = () => {
   console.log("User Context Data:", user);
 
   useEffect(() => {
+    const loggedInUserId = user.id
     fetch('http://localhost:5000/api/recipients', {
       method: 'POST',
       headers: {
