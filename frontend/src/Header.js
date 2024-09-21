@@ -31,7 +31,9 @@ const Header = () => {
         <ul>
           <li><a href="/home">マイページ</a></li>
           <li><a href="/recipients">送金</a></li>
-          <li><a href="billing/claim">請求</a></li>
+          <li><a href="/billing/claim">請求</a></li>
+          <li><a href="/billing/history">請求履歴</a></li>
+          
         </ul>
       </nav>
     </header>

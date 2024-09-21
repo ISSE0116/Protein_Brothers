@@ -7,7 +7,8 @@ import Recipients from './TransferPage';
 import Send from './TransferForm';
 import TransferSuccess from './TransferSuccess';
 import BillingForm from './BillingForm';
-import BillingMakelink from './BillingMakelink';
+import BillingSuccess from './BillingSuccess';
+import BillingHistory from './BillingHistory';
 
 const AppRouter = () => {
   return (
@@ -19,7 +20,8 @@ const AppRouter = () => {
         <Route path="/recipients" element={<Recipients />} />
         <Route path="/transfer-success" element={<TransferSuccess />} />
         <Route path="/billing/claim" element={<BillingForm />} />
-        <Route path="/billing/makelink" element={<BillingMakelink />} />     
+        <Route path="/billing-success" element={<BillingSuccess />} /> 
+        <Route path="/billing/history" element={<BillingHistory />} /> 
       </Routes>
     </Router>
   );

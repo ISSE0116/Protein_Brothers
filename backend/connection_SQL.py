@@ -3,7 +3,7 @@ def request():
     # try:
     connection = psycopg2.connect(
         host = "localhost",
-        database = "postgres",
+        database = "bank",
         user = "issei",
         password = "isseiakebi"
     )

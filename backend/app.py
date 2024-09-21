@@ -4,6 +4,7 @@ import psycopg2
 import connection_SQL
 import close_SQL
 import base64;
+from datetime import datetime
 
 app = Flask(__name__)
 CORS(app)
@@ -158,94 +159,87 @@ def remittance():
     except Exception as error:
         return jsonify({"result": False, "error": str(error)}), 500
 
+@app.route('/api/post_billing', methods=['POST'])
+def post_billing():
+    data = request.json
+    bill = data.get('bill')
+    message = data.get('message')
+    id = data.get('id')
+    current_time = datetime.now().isoformat()
 
+    if not id:
+        return jsonify({"result": False, "error": "Invalid data"}), 400
 
-#############################################################
+    try:
+        connection = connection_SQL.request()
+        cursor = connection.cursor()
 
-# @app.route('/api/user', methods=['GET'])
-# def get_user():
-#     records = []
-#     user_id = request.args.get('user_id')
-#     try:
-#         connection = connection_SQL.request()
-#         cursor = connection.cursor()
-#         # 引数として実行クエリを入力
-#         querry = 'SELECT id, username, account_number FROM users WHERE id = %s'
-#         cursor.execute(querry, (user_id,))
-#         # クエリの実行によって得たデータをリスト形式で取得
-#         records = cursor.fetchall()
-    
-#     except Exception as error:
-#         print("Error Occured : ", error)
+        # メッセージをbilling_historyテーブルに挿入し、挿入されたIDを取得
+        insert_billing = '''
+        INSERT INTO billing_history (amount, created_at, message, recipient_id, billing_link) 
+        VALUES (%s, %s, %s, %s, %s) RETURNING id;
+        '''
+        cursor.execute(insert_billing, (bill, current_time, message, id, ""))
+        billing_id = cursor.fetchone()[0]  # 挿入された請求のIDを取得
 
-#     users = []
-#     for row in records:
-#         users.append({
-#             "id": row[0],
-#             "username": row[1],
-#             "account_number": row[2]
-#     })
+        # 請求URLを生成
+        billing_url = f"http://localhost:3000/billing/{billing_id}"
 
-#     close_SQL.final(connection, cursor)
-#     return jsonify(users)
+        # billing_linkフィールドを更新
+        update_billing = '''
+        UPDATE billing_history SET billing_link = %s WHERE id = %s;
+        '''
+        cursor.execute(update_billing, (billing_url, billing_id))
 
-# @app.route('/api/user', methods=['GET'])
-# def get_user():
-#     records = []
-#     user_id = request.args.get('user_id')
-#     try:
-#         connection = connection_SQL.request()
-#         cursor = connection.cursor()
-#         # 引数として実行クエリを入力
-#         querry = 'SELECT id, username, account_number FROM users WHERE id = %s'
-#         cursor.execute(querry, (user_id,))
-#         # クエリの実行によって得たデータをリスト形式で取得
-#         records = cursor.fetchall()
-    
-#     except Exception as error:
-#         print("Error Occured : ", error)
+        connection.commit()
+        close_SQL.final(connection, cursor)
 
-#     users = []
-#     for row in records:
-#         users.append({
-#             "id": row[0],
-#             "username": row[1],
-#             "account_number": row[2]
-#     })
+        return jsonify({"result": True, "billing_url": billing_url}), 200
 
-#     close_SQL.final(connection, cursor)
-#     return jsonify(users)
+    except Exception as error:
+        return jsonify({"result": False, "error": str(error)}), 500
 
+@app.route('/api/billing_history', methods=['POST'])
+def get_billing_history():
+    data = request.json
+    user_id = data.get('id')
 
-# @app.route('/api/users/<int:user_id>', methods=['GET'])
-# def get_users(user_id):
-#     records = []
-#     try:
-#         connection = connection_SQL.request()
-#         cursor = connection.cursor()
-#         # 引数として実行クエリを入力
-#         querry = 'SELECT id, username, account_number FROM users WHERE id != %s'
-#         cursor.execute(querry, (user_id,))
-#         # クエリの実行によって得たデータをリスト形式で取得
-#         records = cursor.fetchall()
-    
-#     except Exception as error:
-#         print("Error Occured : ", error)
+    print(f"Received user_id: {user_id}")  # デバッグ情報を表示
 
-#     users = []
-#     for row in records:
-#         users.append({
-#             "id": row[0],
-#             "username": row[1],
-#             "account_number": row[2]
-#     })
+    if not user_id:
+        return jsonify({"result": False, "error": "Invalid user ID"}), 400
 
-#     close_SQL.final(connection, cursor)
-#     return jsonify(users)
+    try:
+        connection = connection_SQL.request()
+        cursor = connection.cursor()
 
+        query = '''
+        SELECT amount, created_at, message, billing_link 
+        FROM billing_history 
+        WHERE recipient_id = %s;
+        '''
+        cursor.execute(query, (user_id,))
+        billing_history = cursor.fetchall()
 
-# @app.route()
+        close_SQL.final(connection, cursor)
 
+        result = [
+            {
+                "amount": record[0],
+                "created_at": record[1],
+                "message": record[2],
+                "billing_link": record[3]
+            } 
+            for record in billing_history
+        ]
+
+        print(f"Billing history fetched: {result}")  # デバッグ情報を表示
+
+        return jsonify({"result": True, "billing_history": result}), 200
+
+    except Exception as error:
+        print(f"Error: {str(error)}")  # エラーログを表示
+        return jsonify({"result": False, "error": str(error)}), 500
 
 if __name__ == '__main__':
     app.run(debug=True)

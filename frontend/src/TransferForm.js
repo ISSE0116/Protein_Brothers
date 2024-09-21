@@ -73,11 +73,11 @@ const TransferForm = () => {
         </div>
         <div>
           <label>メッセージ:</label>
-          <textarea
+          <input
+            type="text"
             value={message}
             onChange={(e) => setMessage(e.target.value)}
-            placeholder="メッセージを入力してください"
-            rows="3"
+            required
           />
         </div>
         <button type="submit">送金する</button>

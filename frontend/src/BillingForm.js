@@ -1,5 +1,6 @@
 import React, { useState, useContext } from 'react';
 import { UserContext } from './UserContext'; // ユーザー情報を取得するためのコンテキスト
+import { useNavigate } from 'react-router-dom'; // 画面遷移用
 import './BillingForm.css'; // CSSファイルをインポート
 
 const BillingForm = () => {
@@ -7,8 +8,8 @@ const BillingForm = () => {
   const [bill, setBill] = useState('');
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
-  
+  const navigate = useNavigate(); // navigateを初期化
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -26,15 +27,14 @@ const BillingForm = () => {
         body: JSON.stringify({
           bill: parseFloat(bill),
           message: message,
-          senderId: user.id, // useContextから取得したユーザーIDを使用
+          id: user.id, // useContextから取得したユーザーIDを使用
         }),
       });
 
       const data = await response.json();
       if (data.result) {
-        setSuccess('請求が完了しました。');
-        setBill('');
-        setMessage('');
+        // 請求が成功した場合、生成されたURLを表示するページに遷移
+        navigate('/billing-success', { state: { billing_url: data.billing_url } });
       } else {
         setError(data.error || '請求に失敗しました。');
       }
@@ -49,7 +49,6 @@ const BillingForm = () => {
       <h2>請求フォーム</h2>
       <p>請求者: {user.username}</p> {/* ユーザー名を表示 */}
       {error && <p className="error-message">{error}</p>}
-      {success && <p className="success-message">{success}</p>}
       
       <form onSubmit={handleSubmit}>
         <div>
