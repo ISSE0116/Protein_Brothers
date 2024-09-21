@@ -39,6 +39,7 @@ def update_image_in_db(user_id, image_path):
             print("PostgreSQL connection is closed")
 
 # 例として、既存のユーザーIDと画像ファイルパスを指定して関数を呼び出す
+update_image_in_db(1, "/Users/issei/code/Protein_Brothers/frontend/public/images/human1.png")
 update_image_in_db(2, "/Users/issei/code/Protein_Brothers/frontend/public/images/human2.png")
 update_image_in_db(3, "/Users/issei/code/Protein_Brothers/frontend/public/images/human3.png")
 update_image_in_db(4, "/Users/issei/code/Protein_Brothers/frontend/public/images/human4.png")

@@ -241,5 +241,45 @@ def get_billing_history():
         print(f"Error: {str(error)}")  # エラーログを表示
         return jsonify({"result": False, "error": str(error)}), 500
 
+@app.route('/api/transfer_history', methods=['POST'])
+def get_transfer_history():
+    data = request.json
+    sender_id = data.get('id')
+
+    if not sender_id:
+        return jsonify({"result": False, "error": "Invalid sender ID"}), 400
+
+    try:
+        connection = connection_SQL.request()
+        cursor = connection.cursor()
+
+        # 送金履歴を取得するクエリ
+        query = '''
+        SELECT m.id, m.recipient_id, m.message, m.amount, u.username
+        FROM message m
+        JOIN users u ON m.recipient_id = u.id
+        WHERE m.sender_id = %s;
+        '''
+        cursor.execute(query, (sender_id,))
+        transfer_history = cursor.fetchall()
+
+        close_SQL.final(connection, cursor)
+
+        # 結果をリスト形式に変換
+        result = [
+            {
+                "id": record[0],
+                "recipient_name": record[4],
+                "message": record[2],
+                "amount": record[3]
+            } 
+            for record in transfer_history
+        ]
+
+        return jsonify({"result": True, "transfer_history": result}), 200
+
+    except Exception as error:
+        return jsonify({"result": False, "error": str(error)}), 500
+
 if __name__ == '__main__':
     app.run(debug=True)

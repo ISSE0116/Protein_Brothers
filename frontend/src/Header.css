@@ -11,7 +11,7 @@
 .header-content {
   display: flex;
   align-items: center;
-  justify-content: center; /* 中央揃え */
+  justify-content: space-between; /* 左端と右端に要素を配置 */
   flex-grow: 1; /* コンテンツが中央に寄るように調整 */
 }
 
@@ -22,16 +22,18 @@
   object-fit: cover;
 }
 
-.user-icon-placeholder {
-  width: 50px;
-  height: 50px;
-  background-color: #555;
-  border-radius: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: white;
-  font-size: 16px;
+.logout-button {
+  padding: 5px 10px; /* ボタンの内側の余白を調整 */
+  font-size: 14px; /* フォントサイズを調整 */
+  background-color: #ff4b4b; /* ボタンの背景色 */
+  color: white; /* テキストの色 */
+  border: none; /* ボーダーをなくす */
+  border-radius: 5px; /* ボタンの角を丸くする */
+  cursor: pointer; /* カーソルをポインタにする */
+}
+
+.logout-button:hover {
+  background-color: #ff0000; /* ボタンのホバー時の背景色 */
 }
 
 .hamburger-menu {
@@ -41,8 +43,8 @@
   justify-content: space-between;
   height: 24px;
   width: 35px;
-  margin-left: auto;
-  position: relative; /* アイコンの位置を調整 */
+  margin-left: 20px; /* ログアウトボタンとハンバーガーメニューの間にスペースを追加 */
+  position: relative;
   transition: transform 0.3s; /* アニメーション */
 }
 
@@ -106,4 +108,4 @@
 
 .menu li a:hover {
   background-color: #555;
-}/* Header.css */
+}
