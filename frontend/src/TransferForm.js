@@ -1,20 +1,19 @@
 import React, { useState, useContext } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { UserContext } from './UserContext';
-import './TransferForm.css';
+import './form.css';
 
 const TransferForm = () => {
   const { user, dispatch } = useContext(UserContext);
   const { id: recipientId } = useParams(); // 送金相手のIDを取得
   const [amount, setAmount] = useState('');
-  const [message, setMessage] = useState(''); // メッセージのステートを追加
+  const [message, setMessage] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // 残高チェック
     if (parseFloat(amount) > user.balance) {
       setError('残高不足です。');
       return;
@@ -30,21 +29,19 @@ const TransferForm = () => {
           senderId: user.id,
           recipientId: recipientId,
           amount: parseFloat(amount),
-          message: message, // メッセージも送信
+          message: message,
         }),
       });
 
       const data = await response.json();
       if (data.result) {
-        // ユーザー全体の情報を更新（残高以外の情報も維持）
         dispatch({
           type: 'SET_USER',
           payload: {
-            ...user, // 既存のユーザー情報を保持
-            balance: user.balance - parseFloat(amount), // 残高のみ更新
+            ...user,
+            balance: user.balance - parseFloat(amount),
           },
         });
-        // 成功ページに遷移
         navigate('/transfer-success');
       } else {
         setError(data.error || '送金に失敗しました。');
@@ -56,7 +53,7 @@ const TransferForm = () => {
   };
 
   return (
-    <div className="transfer-form">
+    <div className="form-container">
       <h2>送金フォーム</h2>
       <p>送金先: {user.username}</p>
       <p>預金残高: {user.balance} 円</p>

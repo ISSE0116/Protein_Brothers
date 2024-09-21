@@ -1,0 +1,57 @@
+/* for BillingForm.js TransferForm.js*/
+.form-container {
+  max-width: 400px;
+  margin: 50px auto 0 auto; /* 上部に100pxのマージンを追加 */
+  padding: 20px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.form-container h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #343a40;
+}
+
+.form-container p {
+  text-align: center;
+  color: #6c757d;
+}
+
+.form-container label {
+  display: block;
+  margin-bottom: 5px;
+  color: #495057;
+}
+
+.form-container input[type="number"],
+.form-container input[type="text"] {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.form-container button {
+  width: 100%;
+  padding: 10px;
+  background-color: #006400;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.form-container button:hover {
+  background-color: #008000;
+}
+
+.error-message {
+  color: red;
+  text-align: center;
+  margin-bottom: 15px;
+}

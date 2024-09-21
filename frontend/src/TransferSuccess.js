@@ -1,20 +1,28 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom'; // useNavigateをインポート
-import './TransferSuccess.css';
+import React, { useEffect, useState } from 'react';
+import './success.css'; // 共通のCSSファイルをインポート
 
 const TransferSuccess = () => {
-  const navigate = useNavigate(); // ナビゲート用のフックを使用
+  const [vibrate, setVibrate] = useState(false);
 
-  const handleBackToHome = () => {
-    navigate('/home'); // ホームに戻る
-  };
+  useEffect(() => {
+    setVibrate(true);
+    const timer = setTimeout(() => {
+      setVibrate(false);
+    }, 1000); // 1秒間だけ振動アニメーションを実行
+
+    return () => clearTimeout(timer);
+  }, []);
 
   return (
     <div className="success-page">
-      <h1>送金が完了しました！</h1>
-      <img src="/images/approval.png" alt="送金完了" className="success-image" />
-      <button onClick={handleBackToHome} className="back-to-home-button">
-        トップに戻る
+      <h2>送金が完了しました！</h2>
+      <img 
+        src={`${process.env.PUBLIC_URL}/images/approval.png`} 
+        alt="成功" 
+        className={`success-image ${vibrate ? 'vibrate' : ''}`} 
+      />
+      <button className="success-button" onClick={() => window.location.href = '/home'}>
+        ホームに戻る
       </button>
     </div>
   );

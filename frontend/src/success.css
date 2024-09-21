@@ -1,0 +1,74 @@
+/* for BillingSuccess.js TransferSuccess.js */
+/* success.css */
+.success-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  text-align: center;
+  margin-top: 20px;
+}
+
+.success-image {
+  width: 150px;
+  margin-bottom: 20px;
+  margin-top: 10px;
+}
+
+.vibrate { /* 画像に振動アニメーションを適用するクラス */
+  animation: vibrate 0.5s linear infinite;
+}
+
+.billing-link-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.billing-url {
+  font-size: 16px;
+  margin-right: 10px;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.copy-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 24px;
+  color: #006400; /* ディープグリーン */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.copy-message {
+  color: green;
+  margin-bottom: 10px;
+}
+
+.success-button {
+  background-color: #006400; /* ディープグリーン */
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-size: 16px;
+  border-radius: 5px;
+}
+
+.success-button:hover {
+  background-color: #004d00; /* 少し濃いグリーン */
+}
+
+/* ここにバイブレーションアニメーションを定義 */
+@keyframes vibrate {
+  0% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  50% { transform: translateX(5px); }
+  75% { transform: translateX(-5px); }
+  100% { transform: translateX(0); }
+}

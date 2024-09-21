@@ -1,7 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { UserContext } from './UserContext'; // ユーザー情報を取得するためのコンテキスト
 import { useNavigate } from 'react-router-dom'; // 画面遷移用
-import './BillingForm.css'; // CSSファイルをインポート
+import './form.css'; // CSSファイルをインポート
 
 const BillingForm = () => {
   const { user } = useContext(UserContext); // コンテキストからユーザー情報を取得
@@ -33,7 +33,6 @@ const BillingForm = () => {
 
       const data = await response.json();
       if (data.result) {
-        // 請求が成功した場合、生成されたURLを表示するページに遷移
         navigate('/billing-success', { state: { billing_url: data.billing_url } });
       } else {
         setError(data.error || '請求に失敗しました。');
@@ -45,9 +44,9 @@ const BillingForm = () => {
   };
 
   return (
-    <div className="billing-form">
+    <div className="form-container">
       <h2>請求フォーム</h2>
-      <p>請求者: {user.username}</p> {/* ユーザー名を表示 */}
+      <p>請求者: {user.username}</p>
       {error && <p className="error-message">{error}</p>}
       
       <form onSubmit={handleSubmit}>
