@@ -28,11 +28,8 @@ def test():
 def login():
     # リクエストボディからIDとパスワードを取得
     data = request.json
-    #print(data)
     user_id = data.get('id')
     password = data.get('password')
-    #print(type(user_id))
-    #print(type(password))
 
     user = []
     try:
@@ -41,33 +38,23 @@ def login():
         # 引数として実行クエリを入力
         query = "SELECT * FROM users WHERE id = %s AND password = %s;"
 
-        #print(query)
         cursor.execute(query, (user_id, password))
         # クエリの実行によって得たデータをリスト形式で取得
         user = cursor.fetchone()
-        print(user)
-
         close_SQL.final(connection, cursor)
-        #print(user)
-        #user[3] = base64.b64decode(user[3])
+        encoded_icon = base64.b64decode(user[3])
         if user:
             
             print('case1')
         # タプルを辞書型に変換
-            #user_dict = dict(zip(('id', 'username', 'account_number', 'icon', 'balance', 'password'), user))
             encoded_icon = base64.b64encode(user[3]).decode('utf-8') # user_dictを作成
             user_dict = dict(zip(('id', 'username', 'account_number', 'icon', 'balance', 'password'), [user[0], user[1], user[2], encoded_icon, user[4], user[5]]))
-            #print('case1')
             user_dict['result'] = True
-            #print('case1')
-            print(user_dict)
             return jsonify(user_dict), 200
         else:
-            print('case2')
             return jsonify({"result": False, "error": "Invalid credentials"}), 401
     
     except Exception as error:
-        print('case3')
         return jsonify({"result": False, "error": str(error)}), 500
 
 ##############################################################
@@ -96,7 +83,7 @@ def get_recipients():
 # クエリの実行によって得たデータをリスト形式で取得
     recipients = cursor.fetchall()
     # 結果を辞書形式に変換
-    #encoded_icon = base64.b64encode(user[2]).decode('utf-8') # user_dictを作成
+    encoded_icon = base64.b64encode(user[2]).decode('utf-8') # user_dictを作成
     result = [{"id": recipient[0], "username": recipient[1], "icon": base64.b64encode(recipient[2]).decode('utf-8')} for recipient in recipients]
     close_SQL.final(connection, cursor)
     return jsonify(result)
