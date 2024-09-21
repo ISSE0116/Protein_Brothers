@@ -83,7 +83,6 @@ def get_recipients():
 # クエリの実行によって得たデータをリスト形式で取得
     recipients = cursor.fetchall()
     # 結果を辞書形式に変換
-    encoded_icon = base64.b64encode(user[2]).decode('utf-8') # user_dictを作成
     result = [{"id": recipient[0], "username": recipient[1], "icon": base64.b64encode(recipient[2]).decode('utf-8')} for recipient in recipients]
     close_SQL.final(connection, cursor)
     return jsonify(result)
@@ -145,10 +144,10 @@ def remittance():
 
         # メッセージをmessageテーブルに挿入
         insert_message = '''
-        INSERT INTO message (sender_id, receiver_id, message) 
-        VALUES (%s, %s, %s);
+        INSERT INTO message (sender_id, recipient_id, message, amount) 
+        VALUES (%s, %s, %s, %s);
         '''
-        cursor.execute(insert_message, (sender_id, recipient_id, message))
+        cursor.execute(insert_message, (sender_id, recipient_id, message, amount))
 
         # コミットして変更を確定
         connection.commit()

@@ -18,7 +18,7 @@ const AppRouter = () => {
         <Route path="/send/:id" element={<Send />} /> 
         <Route path="/recipients" element={<Recipients />} />
         <Route path="/transfer-success" element={<TransferSuccess />} />
-        <Route path="/billing/create" element={<BillingForm />} />
+        <Route path="/billing/claim" element={<BillingForm />} />
         <Route path="/billing/makelink" element={<BillingMakelink />} />     
       </Routes>
     </Router>

@@ -11,10 +11,9 @@ const TransferPage = () => {
 
   const { user } = useContext(UserContext); // コンテキストからユーザー情報を取得
 
-  // ユーザー情報をコンソールに出力して確認
-  console.log("User Context Data:", user);
 
   useEffect(() => {
+    console.log("User Context Data:", user);
     const loggedInUserId = user.id
     fetch('http://localhost:5000/api/recipients', {
       method: 'POST',
