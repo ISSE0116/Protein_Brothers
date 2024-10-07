@@ -75,3 +75,5 @@ python3 app.py
 # URLをブラウザに打ち込む
 localhost:3000
 ```
+
+10/8
